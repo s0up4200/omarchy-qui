@@ -22,10 +22,12 @@ Themes missing from the map are ignored.
 
 18 of the 22 rows point at Omarchy palettes from
 [qui-community-themes](https://github.com/autobrr/qui-community-themes). Put
-those CSS files in your instance's themes directory. They need premium, since
-`/api/themes/custom` returns 403 without it.
+those CSS files in your instance's themes directory.
 
 `catppuccin`, `catppuccin-latte`, `nord` and `tokyo-night` work on any instance.
+
+Sideloading is a qui premium feature. See the
+[custom themes docs](https://getqui.com/docs/features/custom-themes).
 
 ## Install
 
