@@ -1,0 +1,73 @@
+#!/bin/bash
+# Set the matching theme on a qui instance when the Omarchy theme changes.
+# Reads QUI_URL and QUI_API_KEY from ~/.config/omarchy/qui-theme.env (mode 600).
+# QUI_DRY_RUN=1 prints the payload and sends nothing.
+
+set -u
+
+# shellcheck source=/dev/null
+source "$HOME/.config/omarchy/qui-theme.env" 2>/dev/null || exit 0
+[[ -n ${QUI_URL:-} && -n ${QUI_API_KEY:-} ]] || exit 0
+
+# Omarchy theme name -> qui theme id. Bare ids are qui's own themes; custom:
+# ids are Omarchy palettes sideloaded into qui, named after the CSS file.
+# catppuccin-latte maps to qui's catppuccin, which gives Latte in light mode.
+declare -A QUI_THEMES=(
+  [catppuccin]=catppuccin
+  [catppuccin-latte]=catppuccin
+  [ethereal]=custom:ethereal
+  [everforest]=custom:everforest
+  [flexoki-light]=custom:flexoki_light
+  [gruvbox]=custom:gruvbox
+  [hackerman]=custom:hackerman
+  [kanagawa]=custom:kanagawa
+  [last-horizon]=custom:last_horizon
+  [lumon]=custom:lumon
+  [lupine]=custom:lupine
+  [matte-black]=custom:matte_black
+  [miasma]=custom:miasma
+  [nord]=nord
+  [osaka-jade]=custom:osaka_jade
+  [retro-82]=custom:retro_82
+  [ristretto]=custom:ristretto
+  [rose-pine]=custom:rose_pine
+  [solitude]=custom:solitude
+  [tokyo-night]=tokyo-night
+  [vantablack]=custom:vantablack
+  [white]=custom:white
+)
+
+# Accent colour, keyed by qui theme id. Without an entry, qui keeps whatever
+# accent that browser last used.
+declare -A QUI_VARIATIONS=(
+  [catppuccin]=blue
+)
+
+# An empty subscript prints "bad array subscript", which omarchy-hook would
+# show during the theme switch.
+[[ -n ${1:-} ]] || exit 0
+theme_id=${QUI_THEMES[$1]:-}
+[[ -n $theme_id ]] || exit 0
+
+# Mode from the named theme, not the current one, so the dry run is truthful.
+theme_dir=$HOME/.config/omarchy/themes/$1
+[[ -d $theme_dir ]] || theme_dir=${OMARCHY_PATH:-/usr/share/omarchy}/themes/$1
+mode=$(omarchy-theme-color --file "$theme_dir/colors.toml" mode)
+
+variation=${QUI_VARIATIONS[$theme_id]:-}
+payload=$(printf '{"themeId":"%s","mode":"%s"%s}' \
+  "$theme_id" "$mode" "${variation:+,\"variation\":\"$variation\"}")
+
+if [[ ${QUI_DRY_RUN:-0} == 1 ]]; then
+  echo "$1 -> $payload"
+  exit 0
+fi
+
+# Runs inside omarchy-theme-set: never stall or fail the theme switch.
+curl -s --max-time 3 -o /dev/null \
+  -X PUT "$QUI_URL/api/themes/settings" \
+  -H "X-API-Key: $QUI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "$payload"
+
+exit 0
