@@ -1,4 +1,4 @@
-# qui-omarchy
+# omarchy-qui
 
 Make [qui](https://github.com/autobrr/qui) follow your
 [Omarchy](https://omarchy.org/) theme.
@@ -32,9 +32,9 @@ Sideloading is a qui premium feature. See the
 ## Install
 
 ```bash
-git clone https://github.com/s0up4200/qui-omarchy ~/.local/share/qui-omarchy
+git clone https://github.com/s0up4200/omarchy-qui ~/.local/share/omarchy-qui
 mkdir -p ~/.config/omarchy/hooks/theme-set.d
-ln -s ~/.local/share/qui-omarchy/qui-theme ~/.config/omarchy/hooks/theme-set.d/qui-theme
+ln -s ~/.local/share/omarchy-qui/qui-theme ~/.config/omarchy/hooks/theme-set.d/qui-theme
 
 install -m 600 /dev/null ~/.config/omarchy/qui-theme.env
 cat > ~/.config/omarchy/qui-theme.env <<'EOF'
