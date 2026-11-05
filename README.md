@@ -20,7 +20,7 @@ Themes missing from the map are ignored.
 - A qui instance serving `/api/themes`
 - A qui API key, from Settings, API Keys
 
-18 of the 22 rows point at Omarchy palettes from
+19 of the 23 rows point at Omarchy palettes from
 [qui-community-themes](https://github.com/autobrr/qui-community-themes). Put
 those CSS files in your instance's themes directory.
 
@@ -86,7 +86,7 @@ sideloaded theme on an instance without premium.
 
 ## Why the map is hardcoded
 
-Deriving it would cover 18 of the rows: swap dashes for underscores, prefix
+Deriving it would cover 19 of the rows: swap dashes for underscores, prefix
 `custom:`. It would also fire for themes your instance lacks. qui does not
 validate `custom:` ids, so `void` stores `custom:void` and a fresh browser finds
 no CSS. The map is what keeps an unknown theme a no-op.
